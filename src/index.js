@@ -8,12 +8,13 @@ dotenv.config({
   path: "./env",
 });
 const app = express();
+const port = process.env.PORT || 3000;
 
 connectDB()
   .then(() => {
     console.log("mongoDB connected and called from index.js");
 
-    app.listen(process.env.PORT || 3000, () => {
+    app.listen(port, () => {
       console.log("Server is running on port ", process.env.PORT);
     });
   })
