@@ -20,8 +20,15 @@ app.use(express.urlencoded({extended:true, limit:"16kb"}));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-app.get("/", cors(corsOptions), (req, res) => {
- return res.send("hello world");
-});
+//import routes
+import userRouter from "./routes/user.routes.js";
+
+
+
+//routes declarations
+app.use("/api/v1/user", userRouter);   //api/v1/user is the base route for which userRouter controller is called
+
+
+
 
 export default app;
