@@ -18,7 +18,6 @@ const registerUser = asyncHandler(async (req, res) => {
     password,
     refreshToken,
   } = req.body;
-  console.log("req.body ", req.body);
 
   //step-2 do validation of frontend data based on user model schema
   if (
@@ -37,11 +36,11 @@ const registerUser = asyncHandler(async (req, res) => {
   }
   //step-3 check if user already exist or not
 
-  const isUserExist = User.findOne({
+  const isUserExist = await User.findOne({
     //$or method se we will check either of these field's found in db then we should throw error
     $or: [{ email }, { userName }],
   });
-  console.log("isUserExist ", isUserExist);
+
   if (isUserExist)
     throw new ApiError(
       409,
@@ -50,8 +49,11 @@ const registerUser = asyncHandler(async (req, res) => {
 
   //step-4 check for avatar and check for cover image, are they present or not
   const localAvatarFilePath = req.files?.avatar[0]?.path;
-  console.log("localAvatarFilePath ", localAvatarFilePath);
-  // const localCoverImageFilePath = req.files?.coverImage[0]?.path  localCoverImageFilePath is not mandatory
+  const localCoverImageFilePath =
+    req.files &&
+    Array.isArray(req.files.coverImage) &&
+    req.files?.coverImage[0]?.path; //localCoverImageFilePath is not mandatory
+
   if (!localAvatarFilePath) {
     throw new ApiError(400, "Avatar image file is required");
   }
